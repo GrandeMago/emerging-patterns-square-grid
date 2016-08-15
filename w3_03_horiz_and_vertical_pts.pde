@@ -41,6 +41,7 @@ void setup() {
   pixelDensity(2);  // use this for high density displays (retina type)
   frameRate(600);  // to force maximum drawing speed
   colorMode(HSB, 360, 100, 100, 100);
+  background(0, 100, 0, 100);
 
   
   // change each value below for different visual
@@ -91,7 +92,7 @@ void draw() {
   //similar();  //  a function that draws lines when horiz points get close enough with the next line horiz point (same for vertical)
   dissimilar();  //  a function that draws lines when horiz and vertical points get close enough
  
-  if (mousePressed) {
+  if (mousePressed) {  //  not used
   }
     
 }
@@ -99,8 +100,6 @@ void draw() {
 
 void update() {
   for (int i=0; i<num; i++) {
-
-    float r = radians(frameCount*speed[i] );
 
     if (i%2 == 1) { // odd index points run vertically
       y[i] = y[i]+ 10*speed[i];//height/2 + sin(r + phase[i])* width/2;
@@ -172,8 +171,7 @@ void dissimilar() {
        stroke(h, s, b, a);
         line(x[i], y[i], x[j], y[j]);
 
-        // stroke(255);
-        point(x[i], y[2]);
+        point(x[i], y[i]);
         point(x[j], y[j]);
       } 
    }
