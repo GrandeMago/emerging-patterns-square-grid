@@ -21,6 +21,9 @@ float[] x;       // x-position of point
 float[] y;       // y-position of point
 float[] speed;   // speed 
 float[] phase;   // phase
+float theta = 45;
+float diagonal = sqrt(2*(width/2*width/2));
+
 
 float distanceMargin;
 float rowHeight;
@@ -37,15 +40,15 @@ void setup() {
 
   //Fullscreen: to make fullscreen run this sketch with presentation mode ( sketch menu > Present )
   //size(displayWidth, displayHeight);
-  size(540, 540, P3D);  //P3D is used to speed up the drawing
+  size(960, 960, P2D);  //P3D is used to speed up the drawing
   pixelDensity(2);  // use this for high density displays (retina type)
   frameRate(600);  // to force maximum drawing speed
   colorMode(HSB, 360, 100, 100, 100);
-  background(0, 100, 0, 100);
+  background(0,100,0,100);
 
   
   // change each value below for different visual
-  num = 12;  //there are num/2 point running horizontally and num/2 point running vertically
+  num = 6;  //there are num/2 point running horizontally and num/2 point running vertically
   rowHeight = height/(num/2-1); // height of each row
   distanceMargin = rowHeight*.03;
 
@@ -58,9 +61,9 @@ void setup() {
   
   startHue = 220;
   h = startHue;
-  hueIncrem = 6;
-  s = 100;
-  b = 80;
+  hueIncrem = 4;
+  s = 80;
+  b = 90;
   a = 20;
 
 
@@ -87,19 +90,33 @@ void draw() {
   // don't clear the screen each frame by calling background()
   println(frameRate+"  "+frameCount);  //  used to monitor drawing speed and computer performance
   
-  fill(255);
   update();  //   a function that updates (and displays) the points position
-  //similar();  //  a function that draws lines when horiz points get close enough with the next line horiz point (same for vertical)
-  dissimilar();  //  a function that draws lines when horiz and vertical points get close enough
- 
-  if (mousePressed) {  //  not used
-  }
+  if(frameCount< 30000) {
+    pushMatrix();  
+    translate(width/2, height/2);
+    rotate(radians(theta));
+    translate(-width/2, -height/2);
     
+    //similar();  //  a function that draws lines when horiz points get close enough with the next line horiz point (same for vertical)  
+    dissimilar(startHue);  //  a function that draws lines when horiz and vertical points get close enough
+    
+    popMatrix();
+  } else {
+    dissimilar(startHue+180);
+  }
+  if(frameCount>60000){
+    saveFrame("frame-###.png");
+    println("I am done!");
+    noLoop();
+  }
+  
+
 }
 
 
 void update() {
   for (int i=0; i<num; i++) {
+
 
     if (i%2 == 1) { // odd index points run vertically
       y[i] = y[i]+ 10*speed[i];//height/2 + sin(r + phase[i])* width/2;
@@ -136,7 +153,7 @@ void similar() {
         line(x[i], y[i], x[i+2], y[i+2]);
 
         // stroke(255);
-        point(x[i], y[2]);
+        point(x[i], y[i]);
         point(x[i+1], y[i+2]);
       }      
     }
@@ -149,14 +166,14 @@ void similar() {
         line(x[i], y[i], x[i+2], y[i+2]);
 
         // stroke(255);
-        point(x[i], y[2]);
+        point(x[i], y[i]);
         point(x[i+1], y[i+2]);
       }      
     }        
   }  
 }
 
-void dissimilar() {
+void dissimilar(float startHue) {
   for(int i=0; i< num; i+=2) {
     h = startHue;
    for(int j = 1; j<num; j+=2) {
